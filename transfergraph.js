@@ -1,48 +1,58 @@
 // LOL IIFE
 typeof function( window, undefined ) {
-  var canvas = document.getElementById('canvas')
+  const canvas = document.getElementById('canvas')
     , input = document.getElementById('input')
     , ctx = canvas.getContext('2d')
-    , height = canvas.height
+    let height = canvas.height
     , width = canvas.width
     , len = width
     , equation
-    , curve
+    , plotCurve
+    
+  const curve = (amount) => {
+			let n_samples = 1028,
+				curve = new Float32Array(n_samples);
+			for (let i = 0; i < n_samples; ++i) {
+				let x = ((i * 2) % n_samples) - 1;
+				curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
+			}
+			return curve;
+		};
 
   // set default
-  input.value = '(3 + 20) * x * 57 * (Math.PI / 180) / (Math.PI + 20 * Math.abs(x))'
+  input.value = 'amount'
   input.placeholder = input.value
   equation = new Function('x', 'return ' + input.value )
-  curve = makeCurve(len)
-  graph()
+//   plotCurve = makeCurve(len)
+//   graph()
 
-  // listen for changes
-  input.addEventListener('keyup', function(e) {   
-    var eq = input.value
-    e.preventDefault()
-    try {
-      equation = new Function('x', 'return ' + eq )
-      // throw if the equation doesn't return a number
-      equation(0).toFixed(1)
-      curve = makeCurve(len)
-      graph()
-      input.className = ''
-    } catch(err){
-      input.className = 'error'
-    }
-  }, false)
+//   // listen for changes
+//   input.addEventListener('keyup', function(e) {   
+//     var eq = input.value
+//     e.preventDefault()
+//     try {
+//       equation = new Function('x', 'return ' + eq )
+//       // throw if the equation doesn't return a number
+//       equation(0).toFixed(1)
+//       curve = makeCurve(len)
+//       graph()
+//       input.className = ''
+//     } catch(err){
+//       input.className = 'error'
+//     }
+//   }, false)
 
   // generate the curve array
-  function makeCurve( samples ) {  
-    var curve = new Float32Array(samples)
-      , i = 0  
-      , x
-    for ( ; i < samples; i++ ) {
-      x = i * 2 / samples - 1
-      curve[i] = equation(x)
-    }
-    return curve
-  }
+//   function makeCurve( samples ) {  
+//     var curve = new Float32Array(samples)
+//       , i = 0  
+//       , x
+//     for ( ; i < samples; i++ ) {
+//       x = i * 2 / samples - 1
+//       curve[i] = equation(x)
+//     }
+//     return curve
+//   }
 
   // draw it
   function graph() {
